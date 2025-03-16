@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Audit Report - Rajendra Bhawan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #1E3A8A, #F97316);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background: #F97316;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #FF8C42;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Energy Audit Report - Rajendra Bhawan</h1>
+        <p>Fill in the details and generate a PDF report</p>
+        
+        <h2>Electricity Consumption</h2>
+        <input type="text" id="electricity" placeholder="Total electricity (kWh/month)">
+        <textarea id="appliances" placeholder="Major electricity-consuming appliances"></textarea>
+        <input type="text" id="renewable" placeholder="Renewable energy sources (if any)">
+
+        <h2>LPG Consumption</h2>
+        <input type="text" id="lpg" placeholder="LPG used (kg/month)">
+        <textarea id="lpg_efficiency" placeholder="LPG efficiency & wastage"></textarea>
+
+        <h2>Fuel Consumption</h2>
+        <input type="text" id="fuel" placeholder="Fuel usage for hostel transport">
+        <textarea id="emissions" placeholder="Environmental impact of vehicle emissions"></textarea>
+
+        <h2>Energy Efficiency Analysis</h2>
+        <textarea id="efficiency" placeholder="Observations on inefficiencies"></textarea>
+        
+        <h2>Opportunities for Improvement</h2>
+        <textarea id="improvements" placeholder="Suggestions for saving energy"></textarea>
+        
+        <button onclick="generatePDF()">Generate PDF Report</button>
+    </div>
+
+    <script>
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(16);
+            doc.text("Energy Audit Report - Rajendra Bhawan", 10, 10);
+            
+            let content = "\nElectricity Consumption:\n" + document.getElementById("electricity").value +
+                "\n\nMajor Appliances:\n" + document.getElementById("appliances").value +
+                "\n\nRenewable Sources:\n" + document.getElementById("renewable").value +
+                "\n\nLPG Consumption:\n" + document.getElementById("lpg").value +
+                "\n\nLPG Efficiency:\n" + document.getElementById("lpg_efficiency").value +
+                "\n\nFuel Consumption:\n" + document.getElementById("fuel").value +
+                "\n\nEnvironmental Impact:\n" + document.getElementById("emissions").value +
+                "\n\nEnergy Efficiency Analysis:\n" + document.getElementById("efficiency").value +
+                "\n\nOpportunities for Improvement:\n" + document.getElementById("improvements").value;
+            
+            doc.setFontSize(12);
+            doc.text(content, 10, 30);
+            doc.save("Energy_Audit_Report.pdf");
+        }
+    </script>
+</body>
+</html>
