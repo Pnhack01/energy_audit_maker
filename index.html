@@ -81,43 +81,46 @@
 
     <script>
         document.getElementById("reportDate").textContent = new Date().toLocaleDateString();
-        
+
         function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            
-            // Add logo
-            const img = new Image();
-            img.src = "https://via.placeholder.com/150"; // Replace with actual logo URL
-            doc.addImage(img, 'PNG', 10, 10, 30, 30);
-            
-            doc.setFontSize(20);
-            doc.text("Energy Audit Report - Rajendra Bhawan", 50, 20);
-            doc.setFontSize(12);
-            doc.text(`Date: ${new Date().toLocaleDateString()}`, 50, 30);
-            
-            let y = 40;
-            function addSection(title, content, isNumber = false, unit = "") {
-                doc.setFontSize(16);
-                doc.text(title, 10, y);
-                y += 7;
+
+            // Load image before adding it to PDF
+            //const img = new Image();
+            //img.src = "https://via.placeholder.com/150"; // Replace with actual logo URL
+            //img.onload = function () {
+              //  doc.addImage(img, 'PNG', 10, 10, 30, 30);
+
+                doc.setFontSize(20);
+                doc.text("Energy Audit Report - Rajendra Bhawan", 50, 20);
                 doc.setFontSize(12);
-                let formattedContent = isNumber ? `${parseFloat(content) * 365} ${unit} (Annual)` : doc.splitTextToSize(content, 180);
-                doc.text(formattedContent, 10, y);
-                y += (Array.isArray(formattedContent) ? formattedContent.length * 7 : 7) + 5;
-            }
-            
-            addSection("Total electricity purchased from the grid", document.getElementById("electricity").value, true, "kWh");
-            addSection("Major electricity-consuming appliances", document.getElementById("appliances").value.replace(/\n/g, "\n• "), false);
-            addSection("Renewable energy sources", document.getElementById("renewable").value);
-            addSection("Amount of LPG used", document.getElementById("lpg").value, true, "kg");
-            addSection("LPG Efficiency & Wastage", document.getElementById("lpg_efficiency").value.replace(/\n/g, "\n• "), false);
-            addSection("Fuel usage for hostel transport", document.getElementById("fuel").value);
-            addSection("Environmental impact of vehicle emissions", document.getElementById("emissions").value.replace(/\n/g, "\n• "), false);
-            addSection("Energy Efficiency Observations", document.getElementById("efficiency").value.replace(/\n/g, "\n• "), false);
-            addSection("Opportunities for Improvement", document.getElementById("improvements").value.replace(/\n/g, "\n• "), false);
-            
-            doc.save("Energy_Audit_Report.pdf");
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 50, 30);
+
+                let y = 40;
+
+                function addSection(title, content, isNumber = false, unit = "") {
+                    doc.setFontSize(16);
+                    doc.text(title, 10, y);
+                    y += 7;
+                    doc.setFontSize(12);
+                    let formattedContent = isNumber ? `${parseFloat(content) * 365} ${unit} (Annual)` : doc.splitTextToSize(content, 180);
+                    doc.text(formattedContent, 10, y);
+                    y += (Array.isArray(formattedContent) ? formattedContent.length * 7 : 7) + 5;
+                }
+
+                addSection("Total electricity purchased from the grid", document.getElementById("electricity").value, true, "kWh");
+                addSection("Major electricity-consuming appliances", document.getElementById("appliances").value.replace(/\n/g, "\n• "), false);
+                addSection("Renewable energy sources", document.getElementById("renewable").value);
+                addSection("Amount of LPG used", document.getElementById("lpg").value, true, "kg");
+                addSection("LPG Efficiency & Wastage", document.getElementById("lpg_efficiency").value.replace(/\n/g, "\n• "), false);
+                addSection("Fuel usage for hostel transport", document.getElementById("fuel").value);
+                addSection("Environmental impact of vehicle emissions", document.getElementById("emissions").value.replace(/\n/g, "\n• "), false);
+                addSection("Energy Efficiency Observations", document.getElementById("efficiency").value.replace(/\n/g, "\n• "), false);
+                addSection("Opportunities for Improvement", document.getElementById("improvements").value.replace(/\n/g, "\n• "), false);
+
+                doc.save("Energy_Audit_Report.pdf");
+            };
         }
     </script>
 </body>
