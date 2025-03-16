@@ -44,67 +44,78 @@
 </head>
 <body>
     <div class="container">
-        <h1>Energy Audit Report - Rajendra Bhawan</h1>
+        <h1><b>Energy Audit Report - Rajendra Bhawan</b></h1>
         <p>Fill in the details and generate a PDF report</p>
+        <p><b>Date:</b> <span id="reportDate"></span></p>
         
-        <h2>Electricity Consumption</h2>
-        <p>Total electricity purchased from the grid (approximate kWh/month):</p>
-        <input type="text" id="electricity" placeholder="Enter value here">
-        <p>Major electricity-consuming appliances:</p>
-        <textarea id="appliances" placeholder="List appliances here"></textarea>
-        <p>Renewable energy sources (if any, like solar panels):</p>
+        <h2><b>Electricity Consumption</b></h2>
+        <p><b>Total electricity purchased from the grid (kWh/day):</b></p>
+        <input type="number" id="electricity" placeholder="Enter value here">
+        <p><b>Major electricity-consuming appliances:</b></p>
+        <textarea id="appliances" placeholder="List appliances here (one per line)"></textarea>
+        <p><b>Renewable energy sources (if any, like solar panels):</b></p>
         <input type="text" id="renewable" placeholder="Enter details here">
 
-        <h2>LPG Consumption</h2>
-        <p>Amount of LPG used in the hostel mess and canteen (kg/month):</p>
-        <input type="text" id="lpg" placeholder="Enter value here">
-        <p>Efficiency and possible wastage:</p>
-        <textarea id="lpg_efficiency" placeholder="Describe efficiency & wastage"></textarea>
+        <h2><b>LPG Consumption</b></h2>
+        <p><b>Amount of LPG used in the hostel mess and canteen (kg/day):</b></p>
+        <input type="number" id="lpg" placeholder="Enter value here">
+        <p><b>Efficiency and possible wastage:</b></p>
+        <textarea id="lpg_efficiency" placeholder="Describe efficiency & wastage (one per line)"></textarea>
 
-        <h2>Fuel Consumption</h2>
-        <p>Use of fuel for hostel transport (if applicable):</p>
+        <h2><b>Fuel Consumption</b></h2>
+        <p><b>Use of fuel for hostel transport (if applicable):</b></p>
         <input type="text" id="fuel" placeholder="Enter details here">
-        <p>Environmental impact of vehicle emissions:</p>
-        <textarea id="emissions" placeholder="Describe impact"></textarea>
+        <p><b>Environmental impact of vehicle emissions:</b></p>
+        <textarea id="emissions" placeholder="Describe impact (one per line)"></textarea>
 
-        <h2>Energy Efficiency Analysis</h2>
-        <p>Observations on wastage or inefficiencies:</p>
-        <textarea id="efficiency" placeholder="Describe inefficiencies"></textarea>
+        <h2><b>Energy Efficiency Analysis</b></h2>
+        <p><b>Observations on wastage or inefficiencies:</b></p>
+        <textarea id="efficiency" placeholder="Describe inefficiencies (one per line)"></textarea>
         
-        <h2>Opportunities for Improvement</h2>
-        <p>Suggestions for saving energy:</p>
-        <textarea id="improvements" placeholder="List suggestions"></textarea>
+        <h2><b>Opportunities for Improvement</b></h2>
+        <p><b>Suggestions for saving energy:</b></p>
+        <textarea id="improvements" placeholder="List suggestions (one per line)"></textarea>
         
         <button onclick="generatePDF()">Generate PDF Report</button>
     </div>
 
     <script>
+        document.getElementById("reportDate").textContent = new Date().toLocaleDateString();
+        
         function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.setFontSize(16);
-            doc.text("Energy Audit Report - Rajendra Bhawan", 10, 10);
             
-            let y = 20;
-            function addSection(title, content) {
-                doc.setFontSize(14);
+            // Add logo
+            const img = new Image();
+            img.src = "https://via.placeholder.com/150"; // Replace with actual logo URL
+            doc.addImage(img, 'PNG', 10, 10, 30, 30);
+            
+            doc.setFontSize(20);
+            doc.text("Energy Audit Report - Rajendra Bhawan", 50, 20);
+            doc.setFontSize(12);
+            doc.text(`Date: ${new Date().toLocaleDateString()}`, 50, 30);
+            
+            let y = 40;
+            function addSection(title, content, isNumber = false, unit = "") {
+                doc.setFontSize(16);
                 doc.text(title, 10, y);
                 y += 7;
                 doc.setFontSize(12);
-                let splitContent = doc.splitTextToSize(content, 180);
-                doc.text(splitContent, 10, y);
-                y += splitContent.length * 7 + 5;
+                let formattedContent = isNumber ? `${parseFloat(content) * 365} ${unit} (Annual)` : doc.splitTextToSize(content, 180);
+                doc.text(formattedContent, 10, y);
+                y += (Array.isArray(formattedContent) ? formattedContent.length * 7 : 7) + 5;
             }
             
-            addSection("Total electricity purchased from the grid (kWh/month)", document.getElementById("electricity").value);
-            addSection("Major electricity-consuming appliances", document.getElementById("appliances").value);
+            addSection("Total electricity purchased from the grid", document.getElementById("electricity").value, true, "kWh");
+            addSection("Major electricity-consuming appliances", document.getElementById("appliances").value.replace(/\n/g, "\n• "), false);
             addSection("Renewable energy sources", document.getElementById("renewable").value);
-            addSection("Amount of LPG used (kg/month)", document.getElementById("lpg").value);
-            addSection("LPG Efficiency & Wastage", document.getElementById("lpg_efficiency").value);
+            addSection("Amount of LPG used", document.getElementById("lpg").value, true, "kg");
+            addSection("LPG Efficiency & Wastage", document.getElementById("lpg_efficiency").value.replace(/\n/g, "\n• "), false);
             addSection("Fuel usage for hostel transport", document.getElementById("fuel").value);
-            addSection("Environmental impact of vehicle emissions", document.getElementById("emissions").value);
-            addSection("Energy Efficiency Observations", document.getElementById("efficiency").value);
-            addSection("Opportunities for Improvement", document.getElementById("improvements").value);
+            addSection("Environmental impact of vehicle emissions", document.getElementById("emissions").value.replace(/\n/g, "\n• "), false);
+            addSection("Energy Efficiency Observations", document.getElementById("efficiency").value.replace(/\n/g, "\n• "), false);
+            addSection("Opportunities for Improvement", document.getElementById("improvements").value.replace(/\n/g, "\n• "), false);
             
             doc.save("Energy_Audit_Report.pdf");
         }
